@@ -188,9 +188,18 @@ ol.stops{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
 .links{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:6px;font-size:.83rem}
 .links a{color:var(--gulf);font-weight:500;text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--gulf) 40%,transparent)}
 .yt::before{content:"▶ ";font-size:.7rem}
-.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin:18px 0 6px;padding-top:12px;border-top:1px solid var(--line)}
-.legend span{display:inline-flex;align-items:center;gap:6px}
-.foot{font-size:.78rem;color:var(--muted);margin-top:10px}
+.legend{background:var(--panel);color:var(--ink);border-radius:10px;
+  box-shadow:0 1px 6px rgb(0 0 0/.3);font-size:.8rem;min-width:0}
+.legend summary{cursor:pointer;font-weight:600;padding:7px 12px;list-style:none;
+  display:flex;align-items:center;gap:8px;user-select:none}
+.legend summary::-webkit-details-marker{display:none}
+.legend summary::after{content:"▾";color:var(--muted);transition:transform .15s}
+.legend:not([open]) summary::after{transform:rotate(-90deg)}
+.legend summary:focus-visible{outline:2px solid var(--sunset);outline-offset:2px;border-radius:10px}
+.legend .rows{display:flex;flex-direction:column;gap:7px;padding:2px 12px 10px}
+.legend .rows span{display:flex;align-items:center;gap:8px;color:var(--muted)}
+.legend .rows i{flex:none}
+.foot{font-size:.78rem;color:var(--muted);margin-top:18px;padding-top:12px;border-top:1px solid var(--line)}
 /* markers */
 .pin{display:grid;place-items:center;width:28px;height:28px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--gulf);border:2px solid var(--panel);box-shadow:0 1px 4px rgb(0 0 0/.35)}
 .pin b{transform:rotate(45deg);color:var(--panel);font-size:.78rem}
@@ -228,11 +237,6 @@ ol.stops{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
       <button class="tab" role="tab" id="tab3" aria-selected="false" data-day="0">전체</button>
     </div>
     <div id="list"></div>
-    <div class="legend">
-      <span><i class="pk free">P</i>무료 주차</span>
-      <span><i class="pk paid">P</i>유료 주차</span>
-      <span><i class="ev">★</i>연휴 행사</span>
-    </div>
     <p class="foot">주차 요금은 2026년 지역 가이드 기준이며 11월 비수기에는 바뀔 수 있습니다. 시 주차장은 QR 코드나 문자로 결제(Destin Park &amp; Play)하고 밤샘 주차는 금지입니다. 영상 설명은 각 유튜브 영상의 소개 내용을 요약했습니다.</p>
   </aside>
   <div id="map" role="application" aria-label="데스틴 일정 지도"></div>
@@ -259,7 +263,7 @@ const STOPS = [
  {day:1,t:"17:00",name:"HarborWalk Village",tag:"하버 보드워크 · 노을·연말 조명",ll:[30.3941,-86.5130],q:"HarborWalk Village, 66 Harbor Blvd, Destin, FL",ev:true,
   desc:"데스틴 하버를 따라 이어진 보드워크. 가이드 영상들은 해 질 녘 산책, 상점과 식당, 하버 위 노을을 추천합니다. 오늘(11/27)은 Black Friday Sip & Shop(17–20시)과 트리 점등식 일정이 있습니다. 아래 행사 상자를 보세요.",
   park:"<b>유료</b> · 빌리지 주차장·타워 $20/일(3–9월 기준, 11월 요금은 입구 확인) / 길 건너 시 주차장 $15/일",
-  vids:[["HarborWalk Village 완전 가이드","oxD97_LQvKY"],["실시간 카메라: 지금 하버 모습","w_ol0TmMWKY"]]},
+  vids:[["HarborWalk Village 가이드 영상","wLQLk07AH5c"],["실시간 카메라: 지금 하버 모습","w_ol0TmMWKY"]]},
  {day:1,t:"18:30",name:"McGuire's Irish Pub",tag:"아이리시 펍 · 자체 양조 · $20–30",ll:[30.39597,-86.5121],q:"McGuire's Irish Pub, 33 Harbor Blvd, Destin, FL",
   desc:"1977년 작은 동네 펍에서 시작해 자체 양조장을 갖춘 데스틴 명물. 영상들은 벽과 천장을 덮은 달러 지폐, 하우스 에일, 라이브 음악을 볼거리로 꼽습니다. 연휴 금요일 저녁은 붐비니 18:30 전후로 가세요.",
   park:"<b>무료</b> · 손님 전용 주차장·뒤편 주차 타워(피크 때 금방 참). 주변 사설 주차장은 견인 엄격($85~)",
@@ -325,7 +329,24 @@ const EVENTS = {
    <p>Baytowne Wharf(샌데스틴) 산타 축제는 18–21시라 귀가 일정과 맞지 않습니다.</p>`},
 };
 
-const map = L.map("map",{zoomControl:true,attributionControl:true}).setView([30.388,-86.46],12);
+const map = L.map("map",{zoomControl:false,attributionControl:true}).setView([30.388,-86.46],12);
+L.control.zoom({position:"topright"}).addTo(map);
+// 범례: 지도 왼쪽 위, 접기/펼치기 (상태는 이 브라우저에 기억)
+const Legend = L.Control.extend({options:{position:"topleft"},onAdd(){
+  const d = L.DomUtil.create("details","legend");
+  let open = !matchMedia("(max-width:820px)").matches;
+  try{ const s=localStorage.getItem("legendOpen"); if(s!==null) open = s==="1"; }catch(e){}
+  d.open = open;
+  d.innerHTML = `<summary>범례</summary><div class="rows">
+    <span><i class="pin" style="width:18px;height:18px"><b style="font-size:.6rem">1</b></i>일정 순서</span>
+    <span><i class="pk free">P</i>무료 주차</span>
+    <span><i class="pk paid">P</i>유료 주차 (눌러서 요금)</span>
+    <span><i class="ev">★</i>연휴 행사</span></div>`;
+  d.addEventListener("toggle",()=>{ try{ localStorage.setItem("legendOpen", d.open?"1":"0"); }catch(e){} });
+  L.DomEvent.disableClickPropagation(d); L.DomEvent.disableScrollPropagation(d);
+  return d;
+}});
+new Legend().addTo(map);
 const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 // 벡터 바탕(타일이 막힌 환경용): 해안선 + 주요 도로
 const base = L.layerGroup().addTo(map);
