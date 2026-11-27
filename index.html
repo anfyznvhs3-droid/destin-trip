@@ -218,6 +218,13 @@ ol.stops{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
 .app.v-list .side{border-right:0;
   padding-left:max(18px,calc((100% - 720px) / 2));
   padding-right:max(18px,calc((100% - 720px) / 2))}
+.tips{margin-top:10px;border:1px solid var(--line);border-radius:10px;padding:0 12px;
+  background:color-mix(in srgb,var(--gulf) 5%,var(--panel));cursor:auto}
+.tips summary{cursor:pointer;font-weight:600;padding:9px 0;color:var(--gulf)}
+.tips h4{margin:10px 0 4px;font-size:.86rem}
+.tips ul{margin:0;padding-left:18px;font-size:.85rem;display:flex;flex-direction:column;gap:4px}
+.tips .src{font-size:.76rem;color:var(--muted);margin:10px 0 4px}
+.tips .links{margin-bottom:10px}
 .foot{font-size:.78rem;color:var(--muted);margin-top:18px;padding-top:12px;border-top:1px solid var(--line)}
 /* markers */
 .pin{display:grid;place-items:center;width:28px;height:28px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--gulf);border:2px solid var(--panel);box-shadow:0 1px 4px rgb(0 0 0/.35)}
@@ -305,9 +312,37 @@ const STOPS = [
   park:"<b>무료</b> · 166면 (카운티 공원)",
   vids:[["가장 인기 있는 퍼블릭 비치 입구","-LuLrzpPpJo"]]},
  {day:2,t:"12:00",name:"실버 샌드 프리미엄 아울렛",en:"Silver Sands Premium Outlets",tag:"아울렛 · 블프 주말 세일 → 어번 귀가",ll:[30.37954,-86.35045],q:"Silver Sands Premium Outlets, Miramar Beach, FL",
-  desc:"귀가 전 마지막 코스인 대형 야외 아울렛. 토 10:00–20:00(연휴 연장 가능). 15:30–16:00에 출발하면 19:30–20:00쯤 어번에 도착합니다.",
+  desc:"귀가 전 마지막 코스인 대형 야외 아울렛. 11/28(토)은 연휴 연장 영업으로 10:00–21:00입니다. 15:30–16:00에 출발하면 19:30–20:00쯤 어번에 도착합니다.",
   park:"<b>무료</b> · 토요일 오후 혼잡, 바깥쪽 구역에 바로 주차",
-  vids:[["방문 가이드","4ToE6VWU9ik"],["아울렛 투어","eaO66LpqT8A"]]},
+  vids:[["방문 가이드","4ToE6VWU9ik"],["아울렛 투어","eaO66LpqT8A"]],
+  extra:`<details class="tips"><summary>🛍 한국인 쇼핑 꿀팁 · 추천 매장</summary>
+   <h4>가기 전에</h4>
+   <ul>
+    <li><b>Simon+ 무료 가입.</b> 2025년 11월에 옛 VIP Shopper Club을 대신해 생긴 사이먼 통합 멤버십입니다. 가입은 무료이고 적립(캐시백·포인트)과 회원 전용 혜택을 줍니다. 예전 같은 "쿠폰북"이 그대로 나오는지는 확인되지 않았으니, 가입 후 앱의 Deals 메뉴에서 매장 쿠폰을 확인하세요.</li>
+    <li><b>사이즈는 입어 보고.</b> 미국 브랜드는 같은 표기라도 한국보다 한 치수쯤 크게 나오는 경우가 많습니다. 아이 옷은 개월 수(예: 12M, 2T) 기준이라 나이보다 키·몸무게로 고르세요.</li>
+    <li><b>가격표에는 세금이 빠져 있습니다.</b> 계산할 때 판매세가 더해집니다.</li>
+   </ul>
+   <h4>이번 블프 주말 공식 공지 세일</h4>
+   <ul>
+    <li>Banana Republic Factory: 블랙프라이데이 전 품목 60% 할인</li>
+    <li>Skechers: 의류 50% 할인</li>
+    <li>Jockey: 블랙프라이데이 딜</li>
+   </ul>
+   <h4>한국인이 많이 사는 품목 (입점 확인된 매장)</h4>
+   <ul class="shops">
+    <li><b>Coach Outlet</b> 가방·지갑·카드지갑 (선물용 1순위)</li>
+    <li><b>Polo Ralph Lauren Factory</b> 케이블 니트, 옥스퍼드 셔츠, 아동 폴로</li>
+    <li><b>Carter's</b> 아기 내복·바디수트 세트 (출산 선물)</li>
+    <li><b>Kate Spade · Michael Kors</b> 지갑·크로스백</li>
+    <li><b>NIKE Factory · adidas</b> 운동화, 트레이닝복</li>
+    <li><b>The North Face · Columbia</b> 플리스, 패딩·바람막이</li>
+    <li><b>Under Armour Factory House</b> 기능성 티셔츠·후디</li>
+    <li><b>Tommy Hilfiger</b> 기본 셔츠·니트</li>
+    <li><b>The Children's Place / Gymboree</b> 아동복</li>
+   </ul>
+   <p class="src">매장 목록·세일·영업시간은 Silver Sands 공식 홈페이지(premiumoutlets.com) 기준입니다. 추천 품목은 한국인 쇼핑객 사이의 일반적인 인기 품목이고, 매장별 재고는 다를 수 있습니다.</p>
+   <p class="links"><a href="https://www.premiumoutlets.com/outlet/silver-sands/stores" target="_blank" rel="noopener">공식 매장 목록</a><a href="https://www.premiumoutlets.com/outlet/silver-sands/deals" target="_blank" rel="noopener">공식 세일·쿠폰</a></p>
+  </details>`},
 ];
 
 const PARKING = [
@@ -418,7 +453,7 @@ function render(day){
         <div class="tag">${s.en?s.en+" · ":""}${s.tag}</div>
         <p class="desc">${s.desc}</p>
         <p class="park">🅿 ${s.park}</p>
-        <div class="links"><a href="${gm(s.q)}" target="_blank" rel="noopener">구글 지도</a>${s.vids.map(v=>`<a class="yt" href="${yt(v[1])}" target="_blank" rel="noopener">${v[0]}</a>`).join("")}</div></div>`;
+        <div class="links"><a href="${gm(s.q)}" target="_blank" rel="noopener">구글 지도</a>${s.vids.map(v=>`<a class="yt" href="${yt(v[1])}" target="_blank" rel="noopener">${v[0]}</a>`).join("")}</div>${s.extra||""}</div>`;
       ol.appendChild(li);
       const m=L.marker(s.ll,{icon:L.divIcon({className:"",html:`<div class="pin"><b>${i+1}</b></div>`,iconSize:[28,28],iconAnchor:[14,28],popupAnchor:[0,-26]}),zIndexOffset:1000,title:s.name})
         .bindPopup(`<div class="pp"><h4>${s.t} · ${s.name}</h4><small>${s.tag}</small><small>🅿 ${s.park}</small><small><a href="${gm(s.q)}" target="_blank" rel="noopener">구글 지도에서 열기</a></small></div>`)
@@ -426,7 +461,7 @@ function render(day){
       const focus=()=>{ document.querySelectorAll(".stop").forEach(x=>x.classList.remove("active")); li.classList.add("active");
         document.querySelectorAll(".pin").forEach(x=>x.classList.remove("on"));
         map.flyTo(s.ll,15,{duration:matchMedia("(prefers-reduced-motion: reduce)").matches?0:.8}); m.openPopup(); m.getElement()?.querySelector(".pin")?.classList.add("on"); };
-      li.addEventListener("click",e=>{ if(e.target.closest("a")) return; focus(); });
+      li.addEventListener("click",e=>{ if(e.target.closest("a,details")) return; focus(); });
       li.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();focus();} });
       m.on("click",()=>{ li.classList.add("active"); li.scrollIntoView({block:"nearest",behavior:"smooth"}); });
       markers.push(m);
