@@ -139,6 +139,8 @@
   white-space: nowrap;
   pointer-events: none;
 }
+.leaflet-bottom .leaflet-bar { margin-bottom: 10px; }
+.leaflet-right .leaflet-bar { margin-right: 10px; }
 
 /* Layout: 좌측 스크롤 여정 패널 + 우측 고정 지도 (폰: 지도 위, 여정 아래) */
 :root{
@@ -199,6 +201,23 @@ ol.stops{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
 .legend .rows{display:flex;flex-direction:column;gap:7px;padding:2px 12px 10px}
 .legend .rows span{display:flex;align-items:center;gap:8px;color:var(--muted)}
 .legend .rows i{flex:none}
+.mapctl{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap;
+  max-width:calc(100vw - 80px)}
+.views{display:flex;background:var(--panel);border-radius:10px;padding:3px;gap:2px;
+  box-shadow:0 1px 6px rgb(0 0 0/.3)}
+.views button{border:0;background:transparent;color:var(--ink);font:inherit;
+  font-size:.8rem;font-weight:600;padding:5px 10px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.views button[aria-pressed="true"]{background:var(--gulf);color:var(--panel)}
+.views button:focus-visible{outline:2px solid var(--sunset);outline-offset:1px}
+.side .views{display:none;width:max-content;margin:0 0 12px}
+.app.v-list .side .views{display:flex}
+.app.v-map{grid-template-columns:minmax(0,1fr)}
+.app.v-map .side{display:none}
+.app.v-list{grid-template-columns:minmax(0,1fr)}
+.app.v-list #map{display:none}
+.app.v-list .side{border-right:0;
+  padding-left:max(18px,calc((100% - 720px) / 2));
+  padding-right:max(18px,calc((100% - 720px) / 2))}
 .foot{font-size:.78rem;color:var(--muted);margin-top:18px;padding-top:12px;border-top:1px solid var(--line)}
 /* markers */
 .pin{display:grid;place-items:center;width:28px;height:28px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--gulf);border:2px solid var(--panel);box-shadow:0 1px 4px rgb(0 0 0/.35)}
@@ -218,10 +237,14 @@ ol.stops{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
 .lbl{background:transparent;border:0;box-shadow:none;color:var(--muted);font-size:.7rem;font-weight:600}
 .lbl::before{display:none}
 @media (max-width:820px){
-  .app{grid-template-columns:1fr;grid-template-rows:42vh auto;height:auto}
+  .app{grid-template-columns:minmax(0,1fr);grid-template-rows:42vh auto;height:auto}
   #map{height:42vh;position:sticky;top:0;z-index:1;order:-1}
   .side{border-right:0;overflow:visible;padding-right:max(16px,env(safe-area-inset-right,0px));padding-left:max(16px,env(safe-area-inset-left,0px))}
   .tabs{top:42vh}
+  .app.v-map{grid-template-rows:1fr;height:100%}
+  .app.v-map #map{height:100%;position:relative}
+  .app.v-list{grid-template-rows:auto}
+  .app.v-list .tabs{top:0}
 }
 @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
 </style>
@@ -229,6 +252,7 @@ ol.stops{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
 </head><body>
 <div class="app">
   <aside class="side">
+    <div class="views" role="group" aria-label="화면 보기"></div>
     <h1>데스틴 1박 2일</h1>
     <p class="sub">11/27 (금, 블랙프라이데이) – 11/28 (토) · 어번 출발·귀가 · 일정을 누르면 지도에서 위치가 열립니다</p>
     <div class="tabs" role="tablist">
@@ -261,7 +285,7 @@ const STOPS = [
   desc:"하버 블러바드 가까운 가성비 숙소. 24시간 프런트, 무료 Wi-Fi·조식, 야외 수영장. 장거리 운전 뒤 잠깐 쉬고 저녁 일정으로 이동합니다.",
   park:"<b>무료</b> · 투숙객 야외 주차장", vids:[]},
  {day:1,t:"17:00",name:"HarborWalk Village",tag:"하버 보드워크 · 노을·연말 조명",ll:[30.3941,-86.5130],q:"HarborWalk Village, 66 Harbor Blvd, Destin, FL",ev:true,
-  desc:"데스틴 하버를 따라 이어진 보드워크. 가이드 영상들은 해 질 녘 산책, 상점과 식당, 하버 위 노을을 추천합니다. 오늘(11/27)은 Black Friday Sip & Shop(17–20시)과 트리 점등식 일정이 있습니다. 아래 행사 상자를 보세요.",
+  desc:"데스틴 하버를 따라 이어진 보드워크. 가이드 영상들은 해 질 녘 산책, 상점과 식당, 하버 위 노을을 추천합니다. 11/27 저녁에는 Black Friday Sip & Shop(17–20시)이 열립니다. 위 행사 상자를 보세요.",
   park:"<b>유료</b> · 빌리지 주차장·타워 $20/일(3–9월 기준, 11월 요금은 입구 확인) / 길 건너 시 주차장 $15/일",
   vids:[["HarborWalk Village 가이드 영상","wLQLk07AH5c"],["실시간 카메라: 지금 하버 모습","w_ol0TmMWKY"]]},
  {day:1,t:"18:30",name:"McGuire's Irish Pub",tag:"아이리시 펍 · 자체 양조 · $20–30",ll:[30.39597,-86.5121],q:"McGuire's Irish Pub, 33 Harbor Blvd, Destin, FL",
@@ -299,44 +323,45 @@ const PARKING = [
  {n:"June White Decker Park",ll:[30.3838,-86.4531],free:true,price:"무료",note:"70면 이상 · 1950 Scenic Hwy 98"},
  {n:"James Lee Park",ll:[30.3810,-86.4096],free:true,price:"무료",note:"166면 · 카운티 공원"},
  {n:"Silver Sands 아울렛",ll:[30.3802,-86.3505],free:true,price:"무료",note:"토 오후 혼잡 · 외곽 구역 추천"},
- {n:"Crystal Beach 노상 (참고)",ll:[30.3825,-86.4270],free:false,price:"$20/4시간",note:"Scenic Hwy 98 노상 · 해변 주차 구역 요금"},
 ];
 
 const EVENTS = {
- 1:{title:"오늘 밤 HarborWalk 연휴 행사 (11/27 금)",ll:[30.3943,-86.5124],
+ 1:{title:"11/27 금 저녁 HarborWalk 행사",ll:[30.3943,-86.5124],
    body:`<p><b>Black Friday Sip &amp; Shop</b> 17:00–20:00 · 보드워크 상점가</p>
-   <p><b>Grande 크리스마스 트리 점등식</b> · 캐롤과 핫초코. 한 가이드는 11/27, 다른 가이드는 11/28 16:30–17:30으로 적고 있어 현장에서 확인하세요.</p>
    <p>17:00 노을 산책 일정과 그대로 겹칩니다.</p>
    <ul>
     <li><a class="yt" href="${yt('w_ol0TmMWKY')}" target="_blank" rel="noopener">HarborWalk 실시간 카메라 (지금 붐비는지 확인)</a></li>
     <li><a class="yt" href="${yt('aVZeNLHLCHY')}" target="_blank" rel="noopener">연말 데스틴 조명 브이로그</a></li>
-    <li><a class="yt" href="${yt('k11Ey20snls')}" target="_blank" rel="noopener">HarborWalk 크리스마스 보트 퍼레이드</a></li>
-    <li><a href="https://destinmiramar.com/events/harborwalk-santa-arrival-destin-2026/" target="_blank" rel="noopener">행사 안내 (Destin &amp; Miramar)</a></li>
    </ul>`},
- 2:{title:"토요일 낮 HarborWalk: 산타 도착 퍼레이드 (11/28)",ll:[30.3936,-86.5118],
-   body:`<p><b>Santa's Arrival on the Harbor</b> 12:30 산타가 배를 타고 도착, 보드워크 퍼레이드. 13–16시 산타 사진(무료 4x6 사진), 공연, 페이스 페인팅. 무료.</p>
-   <p>일정상 아울렛 시간대와 겹칩니다. 아이가 있다면 제임스 리(선택 B) 대신 12시까지 HarborWalk에 들러 퍼레이드를 보고 아울렛으로 가는 방법도 있습니다(데커 파크에서 차로 약 15분, HarborWalk에서 아울렛까지 약 30분).</p>
-   <p>Baytowne Wharf(샌데스틴) 산타 축제는 18–21시라 귀가 일정과 맞지 않습니다.</p>`},
 };
 
 const map = L.map("map",{zoomControl:false,attributionControl:true}).setView([30.388,-86.46],12);
-L.control.zoom({position:"topright"}).addTo(map);
-// 범례: 지도 왼쪽 위, 접기/펼치기 (상태는 이 브라우저에 기억)
-const Legend = L.Control.extend({options:{position:"topleft"},onAdd(){
-  const d = L.DomUtil.create("details","legend");
-  let open = !matchMedia("(max-width:820px)").matches;
-  try{ const s=localStorage.getItem("legendOpen"); if(s!==null) open = s==="1"; }catch(e){}
-  d.open = open;
-  d.innerHTML = `<summary>범례</summary><div class="rows">
+L.control.zoom({position:"bottomright"}).addTo(map);
+// 지도 왼쪽 위: 범례(처음엔 펼침, 접기 가능) + 화면 보기 선택
+const VIEWS = [["map","지도"],["split","지도 + 일정"],["list","일정"]];
+const viewBtns = () => VIEWS.map(([k,l])=>`<button type="button" data-view="${k}" aria-pressed="false">${l}</button>`).join("");
+const MapCtl = L.Control.extend({options:{position:"topleft"},onAdd(){
+  const box = L.DomUtil.create("div","mapctl");
+  box.innerHTML = `<details class="legend" open><summary>범례</summary><div class="rows">
     <span><i class="pin" style="width:18px;height:18px"><b style="font-size:.6rem">1</b></i>일정 순서</span>
     <span><i class="pk free">P</i>무료 주차</span>
     <span><i class="pk paid">P</i>유료 주차 (눌러서 요금)</span>
-    <span><i class="ev">★</i>연휴 행사</span></div>`;
-  d.addEventListener("toggle",()=>{ try{ localStorage.setItem("legendOpen", d.open?"1":"0"); }catch(e){} });
-  L.DomEvent.disableClickPropagation(d); L.DomEvent.disableScrollPropagation(d);
-  return d;
+    <span><i class="ev">★</i>연휴 행사</span></div></details>
+    <div class="views" role="group" aria-label="화면 보기">${viewBtns()}</div>`;
+  L.DomEvent.disableClickPropagation(box); L.DomEvent.disableScrollPropagation(box);
+  return box;
 }});
-new Legend().addTo(map);
+new MapCtl().addTo(map);
+document.querySelector(".side .views").innerHTML = viewBtns();
+const app = document.querySelector(".app");
+function setView(v){
+  app.classList.remove("v-map","v-split","v-list"); app.classList.add("v-"+v);
+  document.querySelectorAll("[data-view]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.view===v)));
+  if(v!=="list") setTimeout(()=>{ map.invalidateSize(); if(lastBounds.length) map.fitBounds(lastBounds,{padding:[30,30]}); },50);
+  window.scrollTo(0,0);
+}
+document.addEventListener("click",e=>{ const b=e.target.closest("[data-view]"); if(b) setView(b.dataset.view); });
+let lastBounds = [];
 const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 // 벡터 바탕(타일이 막힌 환경용): 해안선 + 주요 도로
 const base = L.layerGroup().addTo(map);
@@ -407,10 +432,12 @@ function render(day){
       markers.push(m);
     });
   });
-  map.fitBounds(bounds,{padding:[30,30]});
+  lastBounds = bounds;
+  if(!app.classList.contains("v-list")) map.fitBounds(bounds,{padding:[30,30]});
 }
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>render(+b.dataset.day)));
 // 오늘이 11/28 이후면 2일차로 시작
+setView("split");
 const now=new Date(); render(now.getMonth()===10 && now.getDate()>=28 ? 2 : 1);
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{ if(!tileOk) drawBase(); render(curDay); });
 setTimeout(()=>map.invalidateSize(),200);
