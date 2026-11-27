@@ -146,18 +146,18 @@
 :root{
   --sand:#f6f1e7; --panel:#fffdf8; --ink:#1d2a2e; --muted:#5d6b6e; --line:#e3dccd;
   --gulf:#0f7c80; --gulf-soft:#d7efec; --sunset:#d9622b; --free:#2f8a4c; --paid:#c0392b;
-  --land:#efe8d8; --road:#c9bfa9; --coast:#4aa3a6;
+  --land:#efe8d8; --road:#c9bfa9; --coast:#4aa3a6; --rest:#9a5b1f;
   --f-display:"Gowun Batang","Noto Serif KR",serif;
   --f-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --sand:#12191b; --panel:#182225; --ink:#e8efee; --muted:#9fb0b1; --line:#2a3639;
   --gulf:#4cc2c0; --gulf-soft:#173a3b; --sunset:#f08a55; --free:#5cc47c; --paid:#ef6b5a;
-  --land:#1b2427; --road:#3a4649; --coast:#3f9fa1; color-scheme:dark}}
+  --land:#1b2427; --road:#3a4649; --coast:#3f9fa1; --rest:#e0a062; color-scheme:dark}}
 :root[data-theme="dark"]{
   --sand:#12191b; --panel:#182225; --ink:#e8efee; --muted:#9fb0b1; --line:#2a3639;
   --gulf:#4cc2c0; --gulf-soft:#173a3b; --sunset:#f08a55; --free:#5cc47c; --paid:#ef6b5a;
-  --land:#1b2427; --road:#3a4649; --coast:#3f9fa1; color-scheme:dark}
+  --land:#1b2427; --road:#3a4649; --coast:#3f9fa1; --rest:#e0a062; color-scheme:dark}
 html,body{height:100%}
 body{background:var(--sand);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6}
 .app{display:grid;grid-template-columns:minmax(340px,460px) 1fr;height:100%}
@@ -230,6 +230,10 @@ ol.stops{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;g
 .pin{display:grid;place-items:center;width:28px;height:28px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:var(--gulf);border:2px solid var(--panel);box-shadow:0 1px 4px rgb(0 0 0/.35)}
 .pin b{transform:rotate(45deg);color:var(--panel);font-size:.78rem}
 .pin.on{background:var(--sunset)}
+.pin.rest{background:var(--rest)}
+.pin.rest.on{background:var(--sunset)}
+.num.rest{background:var(--rest)}
+.stop.rest h2{color:var(--rest)}
 .pk{display:grid;place-items:center;width:20px;height:20px;border-radius:5px;font-weight:800;font-size:.72rem;color:#fff;border:1.5px solid var(--panel);box-shadow:0 1px 3px rgb(0 0 0/.35)}
 .pk.free{background:var(--free)}.pk.paid{background:var(--paid)}
 .ev{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--sunset);color:#fff;font-size:.9rem;border:2px solid var(--panel);box-shadow:0 0 0 4px color-mix(in srgb,var(--sunset) 35%,transparent)}
@@ -280,6 +284,13 @@ const gm = q => "https://www.google.com/maps/search/?api=1&query=" + encodeURICo
 const yt = (id) => "https://www.youtube.com/watch?v=" + id;
 
 const STOPS = [
+ {day:1,t:"10:00",rest:true,name:"코빙턴 카운티 휴게소",en:"Covington County Rest Area",tag:"휴게 경유지 · US-331 마일포스트 8 · 앨라배마",ll:[31.0917,-86.2935],q:"Covington County Rest Area, US-331, Florala, AL",
+  desc:"앨라배마 교통국(ALDOT)이 운영하는 US-331 휴게소로, 플로리다 경계(플로랄라) 8마일 전에 있습니다. 화장실, 피크닉 테이블, 자판기가 있습니다. 어번에서 약 2시간 40분, 데스틴까지 약 1시간 20분 지점이라 화장실 들르기 딱 좋은 위치입니다. 10분 정도만 쉬어 가세요.",
+  park:"<b>무료</b> · 휴게소 주차장", vids:[]},
+ {day:1,t:"10:40",rest:true,name:"레이크 디퓨니악",en:"Lake DeFuniak · DeFuniak Springs, FL",tag:"휴게 경유지 · 호숫가 산책 20–30분",ll:[30.7213,-86.1176],q:"Lake DeFuniak, Circle Dr, DeFuniak Springs, FL",
+  desc:"거의 완벽한 원형인 약 40에이커 크기의 호수로, 디퓨니악 스프링스 역사지구 한가운데 있습니다. 호수를 도는 Circle Drive를 따라 빅토리아풍 주택과 셔토쿼 홀이 늘어서 있어 다리 풀며 한 바퀴 걷기 좋습니다. 매년 추수감사절 다음 날부터 호수 둘레에 크리스마스 장식(Christmas Reflections)을 하는데, 조명은 저녁(작년 기준 17:30–21:00)에만 켜집니다. 데스틴까지 약 50분.",
+  park:"주차 · 호숫가 Circle Drive 길가 (요금 정보는 찾지 못함)",
+  vids:[["호수 소개: 가 볼 만한가?","B7BloQG29sc"],["호수가 만든 마을 이야기","33ZRuyrEK8c"],["Christmas Reflections 조명","231XCWsRKN4"]]},
  {day:1,t:"12:00",name:"The Back Porch",tag:"해변 앞 해산물 식당 · $20–40",ll:[30.38405,-86.45836],q:"The Back Porch, 1740 Scenic Hwy 98, Destin, FL",
   desc:"1974년부터 이어온 걸프 정면 테라스 식당. 리뷰 영상들은 스모크드 참치 딥, 생굴, 숯불 앰버잭을 대표 메뉴로 꼽습니다. 예약을 받지 않아 연휴에는 한 시간가량 기다렸다는 후기가 있으니 도착하면 바로 대기 명단에 올리세요. 11:00–21:00.",
   park:"<b>무료</b> · 길 건너 전용 주차장, 주변 노상",
@@ -379,6 +390,7 @@ const MapCtl = L.Control.extend({options:{position:"topleft"},onAdd(){
   const box = L.DomUtil.create("div","mapctl");
   box.innerHTML = `<details class="legend" open><summary>범례</summary><div class="rows">
     <span><i class="pin" style="width:18px;height:18px"><b style="font-size:.6rem">1</b></i>일정 순서</span>
+    <span><i class="pin rest" style="width:18px;height:18px"><b style="font-size:.6rem">휴</b></i>휴게 경유지</span>
     <span><i class="pk free">P</i>무료 주차</span>
     <span><i class="pk paid">P</i>유료 주차 (눌러서 요금)</span>
     <span><i class="ev">★</i>연휴 행사</span></div></details>
@@ -446,16 +458,16 @@ function render(day){
     const ol=document.createElement("ol"); ol.className="stops"; list.appendChild(ol);
     L.polyline(st.map(s=>s.ll),{color:css("--gulf"),weight:3,dashArray:"6 7",opacity:.8,interactive:false}).addTo(routeLayer);
     st.forEach((s,i)=>{
-      bounds.push(s.ll);
-      const li=document.createElement("li"); li.className="stop"; li.tabIndex=0;
-      li.innerHTML=`<div><div class="time">${s.t}</div><span class="num">${i+1}</span></div>
+      if(!s.rest) bounds.push(s.ll);
+      const li=document.createElement("li"); li.className="stop"+(s.rest?" rest":""); li.tabIndex=0;
+      li.innerHTML=`<div><div class="time">${s.t}</div><span class="num${s.rest?" rest":""}">${i+1}</span></div>
         <div style="min-width:0"><h2>${s.name}${s.opt?`<span class="opt">${s.opt}</span>`:""}</h2>
         <div class="tag">${s.en?s.en+" · ":""}${s.tag}</div>
         <p class="desc">${s.desc}</p>
         <p class="park">🅿 ${s.park}</p>
         <div class="links"><a href="${gm(s.q)}" target="_blank" rel="noopener">구글 지도</a>${s.vids.map(v=>`<a class="yt" href="${yt(v[1])}" target="_blank" rel="noopener">${v[0]}</a>`).join("")}</div>${s.extra||""}</div>`;
       ol.appendChild(li);
-      const m=L.marker(s.ll,{icon:L.divIcon({className:"",html:`<div class="pin"><b>${i+1}</b></div>`,iconSize:[28,28],iconAnchor:[14,28],popupAnchor:[0,-26]}),zIndexOffset:1000,title:s.name})
+      const m=L.marker(s.ll,{icon:L.divIcon({className:"",html:`<div class="pin${s.rest?" rest":""}"><b>${i+1}</b></div>`,iconSize:[28,28],iconAnchor:[14,28],popupAnchor:[0,-26]}),zIndexOffset:1000,title:s.name})
         .bindPopup(`<div class="pp"><h4>${s.t} · ${s.name}</h4><small>${s.tag}</small><small>🅿 ${s.park}</small><small><a href="${gm(s.q)}" target="_blank" rel="noopener">구글 지도에서 열기</a></small></div>`)
         .addTo(stopLayer);
       const focus=()=>{ document.querySelectorAll(".stop").forEach(x=>x.classList.remove("active")); li.classList.add("active");
